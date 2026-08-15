@@ -18,6 +18,7 @@ An AI framework is a pre-built software library or platform that provides tools,
 
 ## Installation
 
+```ai
 To install the `LangChain` package:
 
 pip install -U langchain
@@ -40,6 +41,8 @@ pip install -U langgraph
 To install the `Deepagents` package:
 
 pip install -qU deepagents langchain-google-genai
+
+```
 
 ## LangChain/LangGraph Conceptual / Practical Guide
 
@@ -97,6 +100,8 @@ $ python langchain_chat.py
 
 If none of these contexts match what you're referring to, could you please provide more details?
 ```
+
+To use OpenAI-compatible local or third-party endpoints (like Ollama, vLLM, or LiteLLM) base_url and api_key need to pass
 
 Create a file: langchain_chat_litellm.py
 
