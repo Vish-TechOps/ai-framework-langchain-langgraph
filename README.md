@@ -59,7 +59,7 @@ Build with LangChain → Orchestrate with LangGraph → Monitor with LangSmith �
 
 Let's build a simple AI that answers questions.
 
-Create a file: langchain_chat.py
+Create a file: `langchain_chat.py`
 
 ```ai
 from dotenv import load_dotenv
@@ -103,7 +103,7 @@ If none of these contexts match what you're referring to, could you please provi
 
 To use OpenAI-compatible local or third-party endpoints (like Ollama, vLLM, or LiteLLM) base_url and api_key need to pass
 
-Create a file: langchain_chat_litellm.py
+Create a file: `langchain_chat_litellm.py`
 
 ```ai
 import os
@@ -143,3 +143,96 @@ It seems like you may be referring to "Agent Skills," but you might be referenci
 
 Could you clarify further if you're referring to a specific subject, context, or name? I'd be happy to help!
 ```
+
+Let's build a simple AI Agent that predict weather of the city. Start by creating a simple agent that can answer questions and call tools. 
+
+Create a file: `langchain_agent.py`
+
+```ai
+from dotenv import load_dotenv
+from langchain.agents import create_agent
+
+# Load OPENAI API KEY from .env
+load_dotenv()
+
+# Define Tool/Function
+# A plain Python function becomes a "tool" the agent can call.
+def get_weather(city: str) -> str:
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
+
+# Create the AI agent
+agent = create_agent(
+    model="openai:gpt-5.5",
+    tools=[get_weather],
+    system_prompt="You are a helpful assistant"
+)
+
+# Call Agent with a user prompt. Agents are invoked with a "messages" list.
+result = agent.invoke(
+    {"messages": [{"role": "user", "content": "What's the weather in sf?"}]}
+)
+
+# Print Agent Response
+print(result["messages"][-1].content_blocks)
+```
+
+#### Flow
+![langchain](docs/images/langchain-agent-flow.png)
+
+#### Run
+
+```ai
+$ python langchain_agent.py
+[{'type': 'text', 'text': 'It’s currently sunny in San Francisco.'}]
+```
+
+## Deep Agents
+
+deepagents is a standalone library built on top of LangChain’s core building blocks for agents. It uses the LangGraph runtime for durable execution, streaming, human-in-the-loop, and other features. The deepagents repository contains:
+
+Deep Agents SDK: A package for building agents that can handle any task
+Deep Agents Code: A terminal coding agent built on the Deep Agents SDK
+ACP integration: An Agent Client Protocol connector for using deep agents in code editors like Zed
+
+Let's build a simple deep agents SDK based agent for ai assistant.
+
+Create a file: `deepagents_agent.py`
+
+```ai
+from dotenv import load_dotenv
+from deepagents import create_deep_agent
+
+# Load OPENAI API KEY from .env
+load_dotenv()
+
+# Define Tool/Function
+# A plain Python function becomes a "tool" the agent can call.
+def get_weather(city: str) -> str:
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
+
+# Create the AI agent
+agent = create_deep_agent(
+    model="openai:gpt-5.5",
+    tools=[get_weather],
+    system_prompt="You are a helpful assistant",
+)
+
+# Call Agent with a user prompt. Agents are invoked with a "messages" list.
+result = agent.invoke(
+    {"messages": [{"role": "user", "content": "what is the weather in sf"}]}
+)
+
+# Print Agent Response
+print(result["messages"][-1].content_blocks)
+```
+
+#### Run
+
+```ai
+$ python deepagents_agent.py 
+[{'type': 'text', 'text': 'It’s always sunny in San Francisco!', 'annotations': [], 'id': 'msg_031c9187a054fcb3006a8056f5f7288194bd0805519adfa38f', 'phase': 'final_answer'}]
+
+```
+
