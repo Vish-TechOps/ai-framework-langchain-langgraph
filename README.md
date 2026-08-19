@@ -236,3 +236,95 @@ $ python deepagents_agent.py
 
 ```
 
+## LangGraph Agents
+
+Let's build a simple graph that takes a name and generates a greeting.
+
+Create a file: `langgraph_agent.py`
+
+1.4.1. Step 1: Import Required Modules
+```ai
+from typing import TypedDict
+from langgraph.graph import StateGraph, START, END
+```
+1.4.2. Step 2: Define Your State
+```ai
+class GreetingState(TypedDict):
+    name: str
+    greeting: str
+```
+1.4.3. Step 3: Create Node Functions
+```ai
+def create_greeting(state: GreetingState) -> dict:
+    """Create a greeting message."""
+    name = state["name"]
+    return {"greeting": f"Hello, {name}! Welcome to LangGraph!"}
+```
+1.4.4. Step 4: Build the Graph
+```ai
+# Create the graph with your state type
+graph = StateGraph(GreetingState)
+
+# Add your node
+graph.add_node("greet", create_greeting)
+
+# Connect: START -> greet -> END
+graph.add_edge(START, "greet")
+graph.add_edge("greet", END)
+
+# Compile (required before running)
+app = graph.compile()
+```
+1.4.5. Step 5: Run the Graph
+```ai
+result = app.invoke({"name": "Alice", "greeting": ""})
+print(result["greeting"])
+# Output: Hello, Alice! Welcome to LangGraph!
+```
+Complete Example
+```ai
+from typing import TypedDict
+from langgraph.graph import StateGraph, START, END
+
+# Define state
+class GreetingState(TypedDict):
+    name: str
+    greeting: str
+
+# Define node
+def create_greeting(state: GreetingState) -> dict:
+    return {"greeting": f"Hello, {state['name']}!"}
+
+# Build graph
+graph = StateGraph(GreetingState)
+graph.add_node("greet", create_greeting)
+graph.add_edge(START, "greet")
+graph.add_edge("greet", END)
+app = graph.compile()
+
+# Run
+result = app.invoke({"name": "Alice", "greeting": ""})
+print(result["greeting"])  # Hello, Alice!
+```
+
+#### Flow
+
+![langchain](docs/images/langgraph-agent-flow.png)
+
+#### Run
+
+```ai
+$ python langgraph_agent.py 
+Hello, Alice!
+```
+
+## 🤝 Let's Build Together
+
+This is an open, evolving workspace for AI frameworks. If you're exploring similar concepts in AI Frameworks, LangChain, or agentic workflows, open an issue, fork it, or reach out — let's collaborate and build this together!
+
+
+## 👤 Author
+
+**Vishvendra Singh** — AI Engineer • Technology Leader • Innovation • Strategy • Governance • Observability • DevOps • SRE • Cloud • Open-Source Contributor
+
+[LinkedIn](https://www.linkedin.com/in/vishvendrasingh1) · [GitHub](https://github.com/Vish-TechOps)
